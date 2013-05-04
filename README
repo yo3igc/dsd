@@ -16,10 +16,10 @@ PERFORMANCE OF THIS SOFTWARE.
 
 	DSD is able to decode several digital voice formats from discriminator
 	tap audio and synthesize  the decoded speech.  Speech 
-	synthesis requires mbelib, which is a separate package.  DSD 1.4.1
-	requires mbelib 1.1 or later.
+	synthesis requires mbelib, which is a separate package.  DSD 1.7.0
+	requires mbelib 1.1 or later and portaudio v19.
 
-	Supported formats in version 1.6.0:
+	Supported formats in version 1.7.0:
 
 	P25 Phase 1  Widely deployed radio standard used in public safety
 	             and amateur radio.
@@ -390,8 +390,6 @@ QPSK example
 
 Input/Output Options
 
-	-i <device>    Audio input device (default is /dev/audio)
-	-o <device>    Audio output device (default is /dev/audio)
 	-d <dir>       Create mbe data files, use this directory
 	-g <num>       Audio output gain (default = 0 = auto)
 	-n             Do not send synthesized speech to audio output device

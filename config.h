@@ -16,12 +16,6 @@
  */
 
 /*
- * System target
- */
-#define BSD                     // bsd/linux audio interface
-//#define SOLARIS // solaris audio interface, untested
-
-/*
  * noisy debug/development options
  */
 //#define X2TDMA_DUMP             // cach and sync bits dump

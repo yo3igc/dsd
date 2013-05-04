@@ -21,9 +21,10 @@ int
 getSymbol (dsd_opts * opts, dsd_state * state, int have_sync)
 {
 
+  short *sample_value = (short*) malloc(1);
   short sample;
   int i, sum, symbol, count;
-  ssize_t result;
+  PaError err;
 
   sum = 0;
   count = 0;
@@ -79,7 +80,8 @@ getSymbol (dsd_opts * opts, dsd_state * state, int have_sync)
           state->jitter = -1;
         }
 
-      result = read (opts->audio_in_fd, &sample, 2);
+      err = Pa_ReadStream(opts->audio_in_fd, sample_value, 1);
+      sample = sample_value[0];
 
       if (opts->disable_filters == 0)
         {

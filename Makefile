@@ -16,7 +16,7 @@
 CC = gcc
 CFLAGS = -O2 -Wall
 INCLUDES = -I. -I/usr/local/include -I/usr/include
-LIBS = -L/usr/local/lib -lm -lmbe 
+LIBS = -L/usr/local/lib -lm -lmbe -lportaudio
 INSTALL=install
 AR=ar
 RANLIB=ranlib

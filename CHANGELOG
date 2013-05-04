@@ -1,3 +1,7 @@
+1.7.0
+   New features:
+   Using portaudio for handling audio input/output operations
+
 1.6.0
    New features:
    Auto mutes P25 encrypted signals by default.

@@ -28,12 +28,7 @@
 #include <sys/ioctl.h>
 #include <fcntl.h>
 #include <unistd.h>
-#ifdef SOLARIS
-#include <sys/audioio.h>
-#endif
-#ifdef BSD
-#include <sys/soundcard.h>
-#endif
+#include <portaudio.h>
 #include <math.h>
 #include <mbelib.h>
 
@@ -57,10 +52,8 @@ typedef struct
   int p25status;
   int p25tg;
   int scoperate;
-  char audio_in_dev[1024];
-  int audio_in_fd;
-  char audio_out_dev[1024];
-  int audio_out_fd;
+  PaStream *audio_in_fd;
+  PaStream *audio_out_fd;
   int split;
   int playoffset;
   char mbe_out_dir[1024];
@@ -165,6 +158,12 @@ typedef struct
 } dsd_state;
 
 /*
+ * Boolean type
+ */
+#define TRUE 1
+#define FALSE 0
+
+/*
  * Frame sync patterns
  */
 #define INV_P25P1_SYNC "333331331133111131311111"
@@ -205,7 +204,7 @@ void processDMRvoice (dsd_opts * opts, dsd_state * state);
 void processAudio (dsd_opts * opts, dsd_state * state);
 void writeSynthesizedVoice (dsd_opts * opts, dsd_state * state);
 void playSynthesizedVoice (dsd_opts * opts, dsd_state * state);
-void openAudioOutDevice (dsd_opts * opts, int speed);
+void openAudioOutDevice (dsd_opts * opts, double speed);
 void openAudioInDevice (dsd_opts * opts);
 int getDibit (dsd_opts * opts, dsd_state * state);
 void skipDibit (dsd_opts * opts, dsd_state * state, int count);
@@ -248,3 +247,7 @@ void processTDULC (dsd_opts * opts, dsd_state * state);
 void processProVoice (dsd_opts * opts, dsd_state * state);
 void processX2TDMAdata (dsd_opts * opts, dsd_state * state);
 void processX2TDMAvoice (dsd_opts * opts, dsd_state * state);
+void initAudio();
+void terminateAudio(dsd_opts * opts);
+void handlePaError(PaError err, int terminate);
+void loopAudio(dsd_opts * opts);

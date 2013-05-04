@@ -93,10 +93,8 @@ initOpts (dsd_opts * opts)
   opts->p25status = 0;
   opts->p25tg = 0;
   opts->scoperate = 15;
-  sprintf (opts->audio_in_dev, "/dev/audio");
-  opts->audio_in_fd = -1;
-  sprintf (opts->audio_out_dev, "/dev/audio");
-  opts->audio_out_fd = -1;
+  opts->audio_in_fd = NULL;
+  opts->audio_out_fd = NULL;
   opts->split = 0;
   opts->playoffset = 0;
   opts->mbe_out_dir[0] = 0;
@@ -243,8 +241,6 @@ usage ()
   printf ("  -z <num>      Frame rate for datascope\n");
   printf ("\n");
   printf ("Input/Output options:\n");
-  printf ("  -i <device>   Audio input device (default is /dev/audio)\n");
-  printf ("  -o <device>   Audio output device (default is /dev/audio)\n");
   printf ("  -d <dir>      Create mbe data files, use this directory\n");
   printf ("  -g <num>      Audio output gain (default = 0 = auto)\n");
   printf ("  -n            Do not send synthesized speech to audio output device\n");
@@ -316,6 +312,7 @@ cleanupAndExit (dsd_opts * opts, dsd_state * state)
     {
       closeWavOutFile (opts, state);
     }
+  terminateAudio(opts);
   printf ("Exiting.\n");
   exit (0);
 }
@@ -339,7 +336,7 @@ main (int argc, char **argv)
   char versionstr[25];
   mbe_printVersion (versionstr);
 
-  printf ("Digital Speech Decoder 1.6.0 with P25 & DMR Filter\n");
+  printf ("Digital Speech Decoder 1.7.0");
   printf ("mbelib version %s\n", versionstr);
 
   initOpts (&opts);
@@ -415,10 +412,10 @@ main (int argc, char **argv)
           printf ("Setting datascope frame rate to %i frame per second.\n", opts.scoperate);
           break;
         case 'i':
-          sscanf (optarg, "%s", opts.audio_in_dev);
+          //sscanf (optarg, "%s", opts.audio_in_dev);
           break;
         case 'o':
-          sscanf (optarg, "%s", opts.audio_out_dev);
+          //sscanf (optarg, "%s", opts.audio_out_dev);
           break;
         case 'd':
           sscanf (optarg, "%s", opts.mbe_out_dir);
@@ -680,21 +677,13 @@ main (int argc, char **argv)
       opts.delay = 0;
       openAudioOutDevice (&opts, 8000);
     }
-  else if (strcmp (opts.audio_in_dev, opts.audio_out_dev) != 0)
+  else
     {
       opts.split = 1;
       opts.playoffset = 0;
       opts.delay = 0;
       openAudioOutDevice (&opts, 8000);
       openAudioInDevice (&opts);
-    }
-  else
-    {
-      opts.split = 0;
-      opts.playoffset = 25;     // 38
-      opts.delay = 0;
-      openAudioInDevice (&opts);
-      opts.audio_out_fd = opts.audio_in_fd;
     }
 
   if (opts.playfiles == 1)
